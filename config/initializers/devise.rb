@@ -24,13 +24,26 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+  config.mailer_sender = 'carloshenriquedossantosmigon@gmail.com'
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
 
   # Configure the parent class responsible to send e-mails.
   # config.parent_mailer = 'ActionMailer::Base'
+
+  config.jwt do |jwt|
+    config.jwt do |jwt|
+      jwt.secret = Rails.application.credentials.devise[:jwt_secret_key]
+      jwt.dispatch_requests = [
+        ['POST', %r{^/users/sign_in$}]
+      ]
+      jwt.revocation_requests = [
+        ['DELETE', %r{^/users/sign_out$}]
+      ]
+      jwt.expiration_time = 1.week.to_i
+    end
+  end
 
   # ==> ORM configuration
   # Load and configure the ORM. Supports :active_record (default) and

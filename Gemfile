@@ -48,4 +48,6 @@ group :development, :test do
   gem "devise", "~> 4.9", ">= 4.9.4"
 
   gem "jwt"
+
+  gem "devise-jwt"
 end
