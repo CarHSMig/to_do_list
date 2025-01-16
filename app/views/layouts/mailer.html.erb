@@ -1,13 +1,49 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <style>
-      /* Email styles need to be inline */
-    </style>
-  </head>
 
-  <body>
+<head>
+  <meta name="viewport" content="width=device-width" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,500;1,500&family=Sora:wght@100..800&display=swap" rel="stylesheet">
+</head>
+<style>
+  *::before, *::after {
+    overflow-X: hidden;
+  }
+
+  html, body {
+    overflow-X: hidden;
+  }
+
+  @media (min-width: 1000px) {
+    .footer-paragraph {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+    }
+
+    .margin {
+      position: relative;
+      left: 186px;
+    }
+  }
+</style>
+<body>
+  <div style="max-width: 100%; padding-left: 5%; padding-bottom: 3%; padding-right: 5%; padding-top: 3%; background-color: #FFFFFF; margin-top: auto; text-align: left;">
+      <img src="<%= @logo_system_url %>" alt="Logo do sistema" style="max-height: 250px; max-width: 250px;" />
+    <br>
     <%= yield %>
-  </body>
+    <div style="text-align: center; padding-top: 20px;">
+      <p class="footer-paragraph" style="color: #393A3B; font-size: 12px; font-family: 'Sora'; margin: 0; word-wrap: break-word; white-space: normal; overflow-wrap: break-word; text-overflow: ellipsis;">
+        <%= I18n.t('mailer.footer') %>
+      </p>
+      <p class="footer-paragraph margin" style="color: #393A3B; font-size: 12px; font-family: 'Sora'; margin: 0; word-wrap: break-word; white-space: normal; overflow-wrap: break-word; text-overflow: ellipsis;">
+        <%= I18n.t('mailer.to-do') %>
+      </p>
+    </div>
+  </div>
+</body>
+
 </html>

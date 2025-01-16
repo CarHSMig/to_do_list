@@ -1,0 +1,15 @@
+default: &defaults
+  api_url: <%= ENV.fetch('API_URL', 'http://localhost:3000') %>
+  front_url: <%= ENV.fetch('FRONT_URL', 'http://localhost:3001') %>
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+production:
+  <<: *defaults
