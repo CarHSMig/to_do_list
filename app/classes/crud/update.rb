@@ -1,34 +1,49 @@
 # frozen_string_literal: true
 
-module CRUDManagement
+module Crud
   class Update
     include ActiveModel::Model
+    include NestedParamPreprocess
+    include ExceptionHandling
 
     validate :instance_validations
-    validates :instance, presence: { message: :not_found }
 
     attr_reader :callbacks, :find_params, :params, :instance, :klass
 
     def self.perform(find_params, params, callbacks, klass)
-      new(find_params, params, callbacks, klass).update
+      new(find_params, params, callbacks, klass).perform
     end
 
     def initialize(find_params, params, callbacks, klass)
-      @params = params
+      @params = params.to_hash.deep_symbolize_keys
       @find_params = find_params
       @callbacks = callbacks
       @klass = klass
+    end
+
+    def perform
+      prepare_nested_attributes
       @instance = load_object
+
+      if instance.present?
+        update
+      else
+        errors.add(:instance, :not_found)
+        callbacks[:not_found]&.call(self)
+      end
     end
 
     def update
-      instance&.assign_attributes(params)
-      if valid?
-        instance.save
-        callbacks[:success]&.call(instance)
-      else
-        merge_instance_errors
-        callbacks[:error]&.call(instance || self)
+      with_exception_handling do
+        instance.assign_attributes(params)
+
+        if valid?
+          block_given? ? yield : instance.save!
+
+          callbacks[:success]&.call(instance)
+        else
+          callbacks[:error]&.call(self)
+        end
       end
     end
 
@@ -40,14 +55,6 @@ module CRUDManagement
 
     def instance_validations
       errors.merge!(instance.errors) if instance&.invalid?
-    end
-
-    def merge_instance_errors
-      return if instance.nil?
-
-      errors.attribute_names.each do |key|
-        instance.errors.add(key, errors[key].join(", ").to_s) unless instance.errors.include?(key)
-      end
     end
   end
 end
